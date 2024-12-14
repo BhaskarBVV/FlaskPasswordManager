@@ -13,10 +13,7 @@ class UserBusiness:
 
         if collection_ref == None:
             uri = AppSettings.cluster_uri
-            if not uri:
-                raise ValueError("Could not find Mongo Uri")
-
-            client = MongoClient()
+            client = MongoClient(uri)
             db = client[AppSettings.database_name]
             collection = db[AppSettings.user_collection]
             collection_ref = collection
