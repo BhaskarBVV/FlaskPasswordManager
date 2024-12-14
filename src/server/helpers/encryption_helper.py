@@ -13,8 +13,9 @@ class EncryptionHelper:
 
     SECRET_KEY = bytes.fromhex(SECRET_KEY)
 
-    def encrypt_data(data: str) -> str:
-        iv = os.urandom(16)  # Generate a random initialization vector (IV)
+    def encrypt_data(data: str, iv: str = None) -> str:
+        if not iv:
+            iv = os.urandom(16)  # Generate a random initialization vector (IV)
         cipher = Cipher(
             algorithms.AES(EncryptionHelper.SECRET_KEY),
             modes.CBC(iv),
@@ -32,18 +33,21 @@ class EncryptionHelper:
         # Return the base64-encoded encrypted data along with the IV for decryption
         return base64.b64encode(iv + encrypted_data).decode("utf-8")
 
+    def get_vector_from_password(encrypted_data) -> str:
+        encrypted_data_bytes = base64.b64decode(encrypted_data)
+        iv = encrypted_data_bytes[:16]  # Extract the IV from the beginning
+        return iv
+
     # Helper function to decrypt data
     def decrypt_data(encrypted_data: str) -> str:
         encrypted_data_bytes = base64.b64decode(encrypted_data)
         iv = encrypted_data_bytes[:16]  # Extract the IV from the beginning
-        encrypted_data_bytes = encrypted_data_bytes[
-            16:
-        ]  # Remaining bytes are the encrypted data
+        encrypted_data_bytes = encrypted_data_bytes[16:]  # Remaining bytes are the encrypted data
 
         cipher = Cipher(
             algorithms.AES(EncryptionHelper.SECRET_KEY),
             modes.CBC(iv),
-            backend=default_backend(),
+            backend=default_backend()
         )
         decryptor = cipher.decryptor()
 
