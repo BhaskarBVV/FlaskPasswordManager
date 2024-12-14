@@ -32,8 +32,7 @@ class LoginBusiness:
             return ResponseHandler.send_response(HTTPStatus.UNAUTHORIZED, error="Invalid creds")
     
     def create_session(slef, userinfo):
-        print(userinfo)
-        session_id = str(uuid.uuid4())
+        session_id = f'session={str(uuid.uuid4())}'
         session_info = {
             "session_id": session_id,
             "username": userinfo.get("username"),

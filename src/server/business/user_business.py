@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from pymongo import MongoClient, errors
-from helpers import ResponseHandler, AppSettings, ErrorMessage, EncryptionHelper
+from helpers import ResponseHandler, AppSettings,\
+    ErrorMessage, EncryptionHelper, Messages
 
 collection_ref = None
 
@@ -28,7 +29,6 @@ class UserBusiness:
             last_name = request.json.get("last_name")
 
             encrypted_password = EncryptionHelper.encrypt_data(password)
-            print(f"The hashed pass: {encrypted_password}")
             user = {
                 "username": username.lower(),
                 "first_name": first_name,
@@ -39,11 +39,11 @@ class UserBusiness:
             collection = UserBusiness.get_collection_reference()
             collection.insert_one(user)
             return ResponseHandler.send_response(
-                HTTPStatus.CREATED, message="Successfully created a new user"
+                HTTPStatus.CREATED, message=Messages.CREATED_USER
             )
         except errors.DuplicateKeyError as de:
             return ResponseHandler.send_response(
-                HTTPStatus.BAD_REQUEST, error=ErrorMessage.DuplicateUsername
+                HTTPStatus.BAD_REQUEST, error=ErrorMessage.DUPLICATE_USERNAME
             )
         except Exception as e:
             return ResponseHandler.send_response(

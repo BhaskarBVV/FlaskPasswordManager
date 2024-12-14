@@ -5,5 +5,6 @@ business = LogoutBusiness()
 
 class Logout(Resource):
 
-    def post():
-        business.logout(request)
+    def post(self):
+        headers = request.headers        
+        return business.logout(headers)
