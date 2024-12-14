@@ -1,2 +1,3 @@
 class ErrorMessage:
-    DuplicateUsername = "User with provided username already exists"
+    DUPLICATE_USERNAME = "User with provided username already exists"
+    UNAUTHORIZED_ACCESS = "User is not authorized to perform this action"
