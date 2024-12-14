@@ -33,7 +33,7 @@ class UserBusiness:
             encrypted_password = EncryptionHelper.encrypt_data(password)
             print(f"The hashed pass: {encrypted_password}")
             user = {
-                "username": username,
+                "username": username.lower(),
                 "first_name": first_name,
                 "last_name": last_name,
                 "email": email,
