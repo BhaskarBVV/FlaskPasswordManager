@@ -1,7 +1,6 @@
 from http import HTTPStatus
-from pymongo import MongoClient, errors
-from helpers import ResponseHandler, AppSettings,\
-    ErrorMessage, EncryptionHelper, Messages
+from pymongo import MongoClient
+from helpers import AppSettings, EncryptionHelper
 
 collection_ref = None
 
@@ -20,32 +19,20 @@ class UserBusiness:
             collection_ref = collection
         return collection_ref
 
-    def add_user(request):
-        try:
-            username = request.json.get("username")
-            email = request.json.get("email")
-            password = request.json.get("password")
-            first_name = request.json.get("first_name")
-            last_name = request.json.get("last_name")
+    def add_user(request):        
+        username = request.json.get("username")
+        email = request.json.get("email")
+        password = request.json.get("password")
+        first_name = request.json.get("first_name")
+        last_name = request.json.get("last_name")
 
-            encrypted_password = EncryptionHelper.encrypt_data(password)
-            user = {
-                "username": username.lower(),
-                "first_name": first_name,
-                "last_name": last_name,
-                "email": email,
-                "password": encrypted_password,
-            }
-            collection = UserBusiness.get_collection_reference()
-            collection.insert_one(user)
-            return ResponseHandler.send_response(
-                HTTPStatus.CREATED, message=Messages.CREATED_USER
-            )
-        except errors.DuplicateKeyError as de:
-            return ResponseHandler.send_response(
-                HTTPStatus.BAD_REQUEST, error=ErrorMessage.DUPLICATE_USERNAME
-            )
-        except Exception as e:
-            return ResponseHandler.send_response(
-                HTTPStatus.INTERNAL_SERVER_ERROR, error=str(e)
-            )
+        encrypted_password = EncryptionHelper.encrypt_data(password)
+        user = {
+            "username": username.lower(),
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "password": encrypted_password,
+        }
+        collection = UserBusiness.get_collection_reference()
+        collection.insert_one(user)

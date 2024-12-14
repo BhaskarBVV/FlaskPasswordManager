@@ -1,8 +1,7 @@
 import uuid
 from datetime import datetime as DT
-from http import HTTPStatus
-from helpers import AppSettings, EncryptionHelper, \
-    ResponseHandler, MongoHelper
+from exceptions import UnauthorizedException
+from helpers import AppSettings, EncryptionHelper, MongoHelper, ErrorMessage
 
 collection_ref = None
 mongoHelper = None
@@ -25,11 +24,9 @@ class LoginBusiness:
         stored_vector = EncryptionHelper.get_vector_from_password(actual_password)
         if actual_password == EncryptionHelper.encrypt_data(entered_password, stored_vector):
             session_id = self.create_session(userinfo)
-            return ResponseHandler.send_response(HTTPStatus.OK, message={
-                "session_id": session_id
-            })
+            return session_id
         else:
-            return ResponseHandler.send_response(HTTPStatus.UNAUTHORIZED, error="Invalid creds")
+            raise UnauthorizedException(ErrorMessage.UNAUTHORIZED_ACCESS)
     
     def create_session(slef, userinfo):
         session_id = f'session={str(uuid.uuid4())}'
