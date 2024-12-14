@@ -5,4 +5,6 @@ from business import UserBusiness
 class User(Resource):
 
     def post(self):
+        data = request.get_json()
+        # Add validation to data
         return UserBusiness.add_user(request)
