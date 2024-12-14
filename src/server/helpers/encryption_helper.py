@@ -7,7 +7,6 @@ from cryptography.hazmat.backends import default_backend
 class EncryptionHelper:
 
     SECRET_KEY = os.getenv("ENCRYPTION_SECRET_KEY")
-    print(SECRET_KEY)
 
     if not SECRET_KEY:
         raise KeyError("Could not find the secret key")
