@@ -14,13 +14,18 @@ class LogoutBusiness:
         return mongoHelper
     
     def logout(self, headers):
-        cookie = headers.get("cookie")
-        filter = {
-            "session_id": cookie
-        }
-        data = LogoutBusiness.get_mongo_client().get_data(AppSettings.database_name, AppSettings.session_collection, filter)
-        if data == None:
+        try:
+            cookie = headers.get("cookie")
+            if cookie == None:
+                raise KeyError(ErrorMessage.INVALID_COOKIE)
+            filter = {
+                "session_id": cookie
+            }
+            data = LogoutBusiness.get_mongo_client().get_data(AppSettings.database_name, AppSettings.session_collection, filter)
+            if data == None:
+                raise Exception(ErrorMessage.INVALID_COOKIE)
+            LogoutBusiness.get_mongo_client().delete_data(AppSettings.database_name, AppSettings.session_collection, filter)
+            return ResponseHandler.send_response(http_status_code=HTTPStatus.OK, message=Messages.LOGGED_OUT)
+        except Exception as e:
             return ResponseHandler.send_response(HTTPStatus.UNAUTHORIZED, error=ErrorMessage.UNAUTHORIZED_ACCESS)
-        LogoutBusiness.get_mongo_client().delete_data(AppSettings.database_name, AppSettings.session_collection, filter)
-        return ResponseHandler.send_response(http_status_code=HTTPStatus.OK, message=Messages.LOGGED_OUT)
         
