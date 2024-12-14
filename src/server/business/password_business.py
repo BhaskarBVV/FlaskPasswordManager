@@ -2,7 +2,6 @@ from http import HTTPStatus
 from helpers import ResponseHandler, ErrorMessage, \
     MongoHelper, AppSettings, EncryptionHelper
 from exceptions import UnauthorizedException
-import uuid
 
 mongoHelper = None
 
@@ -32,7 +31,7 @@ class PasswordBusiness:
         return ResponseHandler.send_response(HTTPStatus.OK, message="Here is your data")
 
     def add_password(self, request):
-        user_info = PasswordBusiness.validate_request(request)
+        session_info = PasswordBusiness.validate_request(request)
         body = request.get_json()
         website = body.get('website')
         password = body.get('password')
@@ -40,6 +39,6 @@ class PasswordBusiness:
         password_info = {
             "website": website,
             "password": encrypted_passwoed,
-            "user_id": str(user_info.get("_id"))
+            "userid": session_info.get("userid")
         }
         PasswordBusiness.get_mongo_client().insert_data(AppSettings.database_name, AppSettings.password_collection, password_info)
