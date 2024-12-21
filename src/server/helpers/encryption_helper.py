@@ -42,17 +42,18 @@ class EncryptionHelper:
     def decrypt_data(encrypted_data: str) -> str:
         encrypted_data_bytes = base64.b64decode(encrypted_data)
         iv = encrypted_data_bytes[:16]  # Extract the IV from the beginning
-        encrypted_data_bytes = encrypted_data_bytes[16:]  # Remaining bytes are the encrypted data
+        encrypted_data_bytes = encrypted_data_bytes[
+            16:
+        ]  # Remaining bytes are the encrypted data
 
         cipher = Cipher(
             algorithms.AES(EncryptionHelper.SECRET_KEY),
             modes.CBC(iv),
-            backend=default_backend()
+            backend=default_backend(),
         )
         decryptor = cipher.decryptor()
 
         decrypted_data = decryptor.update(encrypted_data_bytes) + decryptor.finalize()
-        print(f'Decrypted data: {decrypted_data}')
         # Remove padding from decrypted data
-        pad_length = ord(decrypted_data[-1])
+        pad_length = decrypted_data[-1]
         return decrypted_data[:-pad_length].decode("utf-8")

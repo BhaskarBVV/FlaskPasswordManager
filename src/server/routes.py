@@ -7,8 +7,8 @@ from controllers.logout import Logout
 from controllers.health import Health
 from controllers.update_user_password import UpdatePassword
 
-ROUTES = [[Password, "/password"],
-            [User, "/user"], 
+ROUTES = [[Password, "/passwords"],
+            [User, "/users"], 
             [Login, "/auth/login"],
             [Logout, "/auth/logout"],
             [Health, "/health"],
