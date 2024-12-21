@@ -17,7 +17,9 @@ class RequestValidator:
             raise ValueError(ErrorMessage.SESSION_INFO_ABSENT)
         filter = {"session_id": cookie}
         user_info = RequestValidator.get_mongo_client().get_data(
-            AppSettings.database_name, AppSettings.session_collection, filter
+            AppSettings.password_manager_database_name,
+            AppSettings.session_collection,
+            filter,
         )
         if user_info is None:
             raise UnauthorizedException(ErrorMessage.UNAUTHORIZED_ACCESS)

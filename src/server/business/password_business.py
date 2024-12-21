@@ -18,7 +18,9 @@ class PasswordBusiness:
         session_info = RequestValidator.validate_request(request)
         filter = {"userid": session_info.userid}
         response = PasswordBusiness.get_mongo_client().get_all_data(
-            AppSettings.database_name, AppSettings.password_collection, filter
+            AppSettings.password_manager_database_name,
+            AppSettings.password_collection,
+            filter,
         )
         passwords = PasswordBusiness.fill_passwords(response)
         return passwords
@@ -29,7 +31,9 @@ class PasswordBusiness:
             request, session_info.userid
         )
         PasswordBusiness.get_mongo_client().insert_data(
-            AppSettings.database_name, AppSettings.password_collection, password_info
+            AppSettings.password_manager_database_name,
+            AppSettings.password_collection,
+            password_info,
         )
 
     @staticmethod

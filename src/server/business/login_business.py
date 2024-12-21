@@ -15,7 +15,9 @@ class LoginBusiness:
         entered_password = data.get("password")
         filter = {"username": entered_username}
         userinfo = LoginBusiness.get_mongo_client().get_data(
-            AppSettings.database_name, AppSettings.user_collection, filter
+            AppSettings.password_manager_database_name,
+            AppSettings.user_collection,
+            filter,
         )
         if userinfo is None:
             raise UnauthorizedException(ErrorMessage.INVALID_USERNAME_PASSWORD)
@@ -38,6 +40,8 @@ class LoginBusiness:
             "created_at": DT.utcnow(),
         }
         LoginBusiness.get_mongo_client().insert_data(
-            AppSettings.database_name, AppSettings.session_collection, session_info
+            AppSettings.password_manager_database_name,
+            AppSettings.session_collection,
+            session_info,
         )
         return session_id

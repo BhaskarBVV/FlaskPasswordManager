@@ -13,5 +13,7 @@ class LogoutBusiness:
         cookie = request.headers.get("cookie")
         filter = {"session_id": cookie}
         LogoutBusiness.get_mongo_client().delete_data(
-            AppSettings.database_name, AppSettings.session_collection, filter
+            AppSettings.password_manager_database_name,
+            AppSettings.session_collection,
+            filter,
         )

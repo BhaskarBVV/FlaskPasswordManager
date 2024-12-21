@@ -24,5 +24,7 @@ class UserBusiness:
             "password": encrypted_password,
         }
         UserBusiness.get_mongo_client().insert_data(
-            AppSettings.database_name, AppSettings.user_collection, user
+            AppSettings.password_manager_database_name,
+            AppSettings.user_collection,
+            user,
         )
