@@ -52,7 +52,7 @@ class EncryptionHelper:
         decryptor = cipher.decryptor()
 
         decrypted_data = decryptor.update(encrypted_data_bytes) + decryptor.finalize()
-
+        print(f'Decrypted data: {decrypted_data}')
         # Remove padding from decrypted data
         pad_length = ord(decrypted_data[-1])
         return decrypted_data[:-pad_length].decode("utf-8")

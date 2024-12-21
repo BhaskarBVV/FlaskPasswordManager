@@ -9,7 +9,9 @@ business = PasswordBusiness()
 class Password(Resource):
 
     def get(self):
-        return business.get_password(request)
+        passwords = business.get_password(request)
+        return ResponseHandler.send_response(HTTPStatus.OK, 
+                                             message=passwords)
 
     def post(self):
         try:
