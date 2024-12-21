@@ -3,6 +3,8 @@ from business import UserBusiness
 from pymongo import errors
 from helpers import ResponseHandler, ErrorMessage, Messages
 from http import HTTPStatus
+import traceback
+
 
 class User(Resource):
 
@@ -19,6 +21,7 @@ class User(Resource):
                 HTTPStatus.BAD_REQUEST, error=ErrorMessage.DUPLICATE_USERNAME
             )
         except Exception as e:
+            print(traceback.format_exc())
             return ResponseHandler.send_response(
                 HTTPStatus.INTERNAL_SERVER_ERROR, error=str(e)
             )

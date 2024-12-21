@@ -5,9 +5,11 @@ from controllers.user import User
 from controllers.login import Login
 from controllers.logout import Logout
 from controllers.health import Health
+from controllers.update_user_password import UpdatePassword
 
-ROUTES = [[Password, "/password"],
-            [User, "/user"], 
-            [Login, "/login"],
-            [Logout, "/logout"],
-            [Health, "/health"]]
+ROUTES = [[Password, "/passwords"],
+            [User, "/users"], 
+            [Login, "/auth/login"],
+            [Logout, "/auth/logout"],
+            [Health, "/health"],
+            [UpdatePassword, "/update-password"]]

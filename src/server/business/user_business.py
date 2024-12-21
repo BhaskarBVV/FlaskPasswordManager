@@ -1,25 +1,14 @@
 from http import HTTPStatus
-from pymongo import MongoClient
-from helpers import AppSettings, EncryptionHelper
-
-collection_ref = None
+from helpers import AppSettings, EncryptionHelper, MongoHelper
 
 
 class UserBusiness:
 
     @staticmethod
-    def get_collection_reference():
-        global collection_ref
+    def get_mongo_client():
+        return MongoHelper(AppSettings.cluster_uri)
 
-        if collection_ref == None:
-            uri = AppSettings.cluster_uri
-            client = MongoClient(uri)
-            db = client[AppSettings.database_name]
-            collection = db[AppSettings.user_collection]
-            collection_ref = collection
-        return collection_ref
-
-    def add_user(request):        
+    def add_user(request):
         username = request.json.get("username")
         email = request.json.get("email")
         password = request.json.get("password")
@@ -34,5 +23,8 @@ class UserBusiness:
             "email": email,
             "password": encrypted_password,
         }
-        collection = UserBusiness.get_collection_reference()
-        collection.insert_one(user)
+        UserBusiness.get_mongo_client().insert_data(
+            AppSettings.password_manager_database_name,
+            AppSettings.user_collection,
+            user,
+        )
