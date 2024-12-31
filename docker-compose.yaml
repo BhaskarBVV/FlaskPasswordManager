@@ -1,0 +1,111 @@
+services:
+  # MongoDB container
+  mongo:
+    image: mongo:latest
+    container_name: mongo-db
+    ports:
+      - 27017:27017
+    networks:
+      - password-manager-bridge-network
+
+  # Flask containers
+  my-password-manager-01:
+    container_name: my-password-manager-01
+    build: 
+      context: . # context specifies where the dockerfile is present with respect from where docker-compose is passed.
+    networks:
+      - password-manager-bridge-network
+    environment:
+      - HOST=0.0.0.0
+      - MONGO_URI=mongodb://mongo-db:27017
+      - ENCRYPTION_SECRET_KEY=${ENCRYPTION_SECRET_KEY}
+    depends_on:
+      - mongo
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl", "-f", "http://localhost:8080/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+  
+  my-password-manager-02:
+    container_name: my-password-manager-02
+    build: 
+      context: .
+    networks:
+      - password-manager-bridge-network
+    environment:
+      - HOST=0.0.0.0
+      - MONGO_URI=mongodb://mongo-db:27017
+      - ENCRYPTION_SECRET_KEY=${ENCRYPTION_SECRET_KEY}
+    depends_on:
+      - mongo
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl", "-f", "http://localhost:8080/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+  
+  my-password-manager-03:
+    container_name: my-password-manager-03
+    build: 
+      context: .
+    networks:
+      - password-manager-bridge-network
+    environment:
+      - HOST=0.0.0.0
+      - MONGO_URI=mongodb://mongo-db:27017
+      - ENCRYPTION_SECRET_KEY=${ENCRYPTION_SECRET_KEY}
+    depends_on:
+      - mongo
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl", "-f", "http://localhost:8080/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  my-password-manager-04:
+    container_name: my-password-manager-04
+    build: 
+      context: .
+    networks:
+      - password-manager-bridge-network
+    environment:
+      - HOST=0.0.0.0
+      - MONGO_URI=mongodb://mongo-db:27017
+      - ENCRYPTION_SECRET_KEY=${ENCRYPTION_SECRET_KEY}
+    depends_on:
+      - mongo
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl", "-f", "http://localhost:8080/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  # Nginx container as Load Balancer
+  nginx:
+    image: nginx:latest
+    container_name: nginx-load-balancer
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - password-manager-bridge-network
+    depends_on:
+      - my-password-manager-01
+      - my-password-manager-02
+      - my-password-manager-03
+      - my-password-manager-04
+    restart: always
+
+networks:
+  password-manager-bridge-network:
+    driver: bridge
