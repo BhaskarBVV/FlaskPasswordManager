@@ -1,7 +1,7 @@
 # FlaskPasswordManager
 This is a backend service for password management for users
 
-# How you can manually run the setup locally:
+# How you can manually build the containers for development purpose:
 The backend setup consists of flask API, and MongoDb cluster.
 1. Create a local network, under which you mongoDb and password manager clusters can communicate as: 
     docker network create <network-name>
@@ -92,3 +92,9 @@ use command: set ENCRYPTION_SECRET_KEY=<value>
 ## CAUTION: 
 The Same ENCRYPTION_SECRET_KEY will be used while fetching the passwords from database.
 Don't loose it.
+
+
+## IF YOU ARE RUNNING USING THE MONGO-DB'S container instance instead of cloud instance:
+1. You will need to spin the mongo db container. Such that the mongo db's functioning port 27017 is mapped to your local machine's port. You can use you local machine port 27017 for simplicity.
+- docker run -it -p 27017:27017 --name <container-name> mongo
+- mongo uri: mongodb://localhost:27017/
