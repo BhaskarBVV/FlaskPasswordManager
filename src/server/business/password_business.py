@@ -47,15 +47,17 @@ class PasswordBusiness:
         website = body.get("website")
         password = body.get("password")
         username: str = body.get("username")
-        email = body.get("email")
-        encrypted_passwoed = EncryptionHelper.encrypt_data(password)
-        password_info = {
-            "website": website,
-            "password": encrypted_passwoed,
-            "userid": user_id,
-        }
+        email: str = body.get("email")
+        info: str = body.get("info")
+        encrypted_password = EncryptionHelper.encrypt_data(password)
+        
+        password_info = {}
         PasswordBusiness.add_field("username", username, password_info)
         PasswordBusiness.add_field("email", email, password_info)
+        PasswordBusiness.add_field("website", website, password_info)
+        PasswordBusiness.add_field("info", info, password_info)
+        PasswordBusiness.add_field("userid", user_id, password_info)
+        PasswordBusiness.add_field("password", encrypted_password, password_info)
         return password_info
 
     @staticmethod
@@ -63,11 +65,13 @@ class PasswordBusiness:
         passwords = []
         for _ in encrypted_passwords:
             password = {}
-            password["website"] = _.get("website")
+            PasswordBusiness.add_field("_id", str(_.get("_id")), password)
+            PasswordBusiness.add_field("website", _.get("website"), password)
             PasswordBusiness.add_field("username", _.get("username"), password)
             PasswordBusiness.add_field("email", _.get("email"), password)
+            PasswordBusiness.add_field("info", _.get("info"), password)
             encoded_password = _.get("password")
             decoded_password = EncryptionHelper.decrypt_data(encoded_password)
-            password["password"] = decoded_password
+            PasswordBusiness.add_field("password", decoded_password, password)
             passwords.append(password)
         return passwords

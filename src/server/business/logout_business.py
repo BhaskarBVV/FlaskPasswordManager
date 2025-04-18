@@ -10,8 +10,10 @@ class LogoutBusiness:
 
     def logout(self, request):
         RequestValidator.validate_request(request)
-        cookie = request.headers.get("cookie")
-        filter = {"session_id": cookie}
+        session_id = request.cookies.get('session_id')
+        if session_id is None:
+            raise ValueError(ErrorMessage.SESSION_INFO_ABSENT)
+        filter = {"session_id": session_id}
         LogoutBusiness.get_mongo_client().delete_data(
             AppSettings.password_manager_database_name,
             AppSettings.session_collection,
