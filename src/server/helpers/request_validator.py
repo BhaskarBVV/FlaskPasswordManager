@@ -12,10 +12,10 @@ class RequestValidator:
     @staticmethod
     def validate_request(request) -> SessionInfo:
         headers = request.headers
-        cookie = headers.get("cookie")
-        if cookie is None:
+        session_id = request.cookies.get('session_id')
+        if session_id is None:
             raise ValueError(ErrorMessage.SESSION_INFO_ABSENT)
-        filter = {"session_id": cookie}
+        filter = {"session_id": session_id}
         user_info = RequestValidator.get_mongo_client().get_data(
             AppSettings.password_manager_database_name,
             AppSettings.session_collection,

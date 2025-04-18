@@ -32,7 +32,7 @@ class LoginBusiness:
             raise UnauthorizedException(ErrorMessage.INVALID_USERNAME_PASSWORD)
 
     def create_session(slef, userinfo):
-        session_id = f"session={str(uuid.uuid4())}"
+        session_id = f"{uuid.uuid4()}"
         session_info = {
             "session_id": session_id,
             "username": userinfo.get("username"),

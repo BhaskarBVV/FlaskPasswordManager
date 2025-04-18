@@ -5,7 +5,7 @@ from flask_restful_swagger_2 import Api
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:4200"])
 api = Api(
     app,
     api_version="1.0.0",
